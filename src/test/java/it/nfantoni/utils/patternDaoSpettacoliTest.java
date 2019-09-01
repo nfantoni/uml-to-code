@@ -71,6 +71,8 @@ public class patternDaoSpettacoliTest {
         assertTrue(entities.size()==2);
         assertTrue(entities.get(0).getAttributes().size()==3);
         assertTrue(entities.get(1).getAttributes().size()==4);
+        assertTrue(entities.get(0).getAssociations().size()==1);
+        assertTrue(entities.get(1).getAssociations().size()==1);
 
         assertTrue(entities.get(0).getName().equals("Teatro"));
         assertTrue(entities.get(0).getAttributes().get(0).getName().equals("Nome"));
@@ -109,6 +111,10 @@ public class patternDaoSpettacoliTest {
         assertTrue(entities.get(1).getAttributes().get(3).getNull() == true);
         assertTrue(entities.get(1).getAttributes().get(3).getPrimaryKey() == false);
 
+        assertTrue(entities.get(0).getAssociations().get(0).getClassName().equals("Spettacolo"));
+        assertTrue(entities.get(0).getAssociations().get(0).getMultiplicity().equals("*"));
+        assertTrue(entities.get(1).getAssociations().get(0).getClassName().equals("Teatro"));
+        assertTrue(entities.get(1).getAssociations().get(0).getMultiplicity().equals("1"));
 	}
 
 }

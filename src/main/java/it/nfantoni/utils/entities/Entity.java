@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 public class Entity {
     private String name;
     private List<Attributes> attributes = new ArrayList<>();
+    private List<Association> associations = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -27,6 +28,14 @@ public class Entity {
 
     public void setAttributes(List<Attributes> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(List<Association> associations) {
+        this.associations = associations;
     }
 
     public Entity(Element element) {
@@ -46,6 +55,16 @@ public class Entity {
                                             Boolean.parseBoolean((isNull == null || isNull.isEmpty())?"true":isNull),
                                             Boolean.parseBoolean((isPrimaryKey == null || isPrimaryKey.isEmpty())?"false":isPrimaryKey)));
         });
+
+        NodeList associationNodeList = element.getElementsByTagName("association");
+
+        Stream<Node> associationStream = IntStream.range(0, associationNodeList.getLength())
+                .mapToObj(associationNodeList::item);
+
+        associationStream.forEach(item ->
+            associations.add(new Association(((Element)item).getAttribute("className"),
+                    ((Element)item).getAttribute("multiplicity")))
+        );
 
     }
 }
