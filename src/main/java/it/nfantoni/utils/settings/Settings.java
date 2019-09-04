@@ -47,7 +47,7 @@ public class Settings {
 		this.useSurrogatesId = useSurrogatesId;
 	}
 	
-	public Settings(Element element) throws Exception {
+	public Settings(Element element) {
 		this.defaultPackage = element.getElementsByTagName("defaultPackage").item(0).getTextContent();
 		this.outputPath = element.getElementsByTagName("outputPath").item(0).getTextContent();
 		this.useSurrogatesId = Boolean.parseBoolean(element.getElementsByTagName("useSurrogatesId").item(0).getTextContent());
@@ -62,7 +62,7 @@ public class Settings {
 				this.outputType= OUTPUT_TYPE.BRUTE_FORCE;
 				break; 
 			default:
-				throw new Exception("Output type not recognize");
+				throw new UnsupportedOperationException("Output type not recognize");
 
 		}
 		
