@@ -4,7 +4,9 @@ import it.nfantoni.utils.entities.Entity;
 import it.nfantoni.utils.settings.Settings;
 import it.nfantoni.utils.worker.Dao;
 import it.nfantoni.utils.xml.XmlUtils;
+import org.apache.commons.io.FileDeleteStrategy;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -20,9 +22,15 @@ import static org.junit.Assert.*;
 public class patternDaoSpettacoliTest {
 
     @After
-    public void afterTest(){
-        File daoDirectory = new File("target/dao");
-        daoDirectory.delete();
+    public void afterTest() throws IOException {
+        File file = new File("target/dao");
+        FileDeleteStrategy.FORCE.delete(file);
+    }
+
+    @Before
+    public void beforeTest() throws IOException {
+        File file = new File("target/dao");
+        FileDeleteStrategy.FORCE.delete(file);
     }
 
 	@Test
@@ -138,9 +146,12 @@ public class patternDaoSpettacoliTest {
         Dao dao = new Dao();
         dao.work(settings,entities);
 
-        File file1 = new File("file1.txt");
-        File file2 = new File("file2.txt");
-        boolean isTwoEqual = FileUtils.contentEquals(file1, file2);
+        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/DAOFactory.java"),
+                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/DAOFactory.java")).getFile())));
+        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/SpettacoloDAO.java"),
+                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/SpettacoloDAO.java")).getFile())));
+        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/TeatroDAO.java"),
+                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/TeatroDAO.java")).getFile())));
 
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2DAOFactory.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2DAOFactory.java")).getFile())));
@@ -149,16 +160,11 @@ public class patternDaoSpettacoliTest {
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2TeatroDAO.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2TeatroDAO.java")).getFile())));
 
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/DAOFactory.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/DAOFactory.java")).getFile())));
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/DAOTest.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/DAOTest.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/SpettacoloDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/SpettacoloDAO.java")).getFile())));
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/SpettacoloDTO.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/SpettacoloDTO.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/TeatroDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/TeatroDAO.java")).getFile())));
+
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/TeatroDTO.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/TeatroDTO.java")).getFile())));
     }

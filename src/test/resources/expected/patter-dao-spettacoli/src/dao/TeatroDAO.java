@@ -2,23 +2,19 @@ package dao;
 
 public interface TeatroDAO {
 
-	// --- CRUD -------------
+    // --- CRUD -------------
 
-	public void create(TeatroDTO teatro);
+    public void create(TeatroDTO teatro);
 
-	public TeatroDTO read(String nome);
+    public TeatroDTO read(String nome);
 
-	public boolean update(TeatroDTO teatro);
+    public boolean update(TeatroDTO teatro);
 
-	public boolean delete(String nome);
+    public boolean delete(String nome);
 
-	// ----------------------------------
+    // ----------------------------------
 
-	public boolean createTable();
+    public boolean createTable();
 
-	public boolean dropTable();
-
-	// ----------------------------------
-
-	public String metodo();
+    public boolean dropTable();
 }

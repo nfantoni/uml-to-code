@@ -17,7 +17,7 @@ public class SqlUtilities {
         map.put("INT", "int");
 
         Optional<Map.Entry<String,String>> result = map.entrySet()
-                .stream().filter(entry -> entry.getKey().contains(sqlType)).findFirst();
+                .stream().filter(entry -> sqlType.contains(entry.getKey())).findFirst();
 
         return result.isPresent()?result.get().getValue():"";
     }

@@ -29,7 +29,5 @@ public abstract class DAOFactory {
     }
 
     // --- Factory specification: concrete factories implementing this spec must provide these methods! ---
-    public abstract TeatroDAO getTeatroDAO();
-    public abstract SpettacoloDAO getSpettacoloDAO();
-
+{$abstract-dao}
 }
