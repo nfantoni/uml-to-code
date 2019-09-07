@@ -3,7 +3,7 @@
 	<settings>
 		<defaultPackage>it.nfantoni.dao.test</defaultPackage>
 		<outputType>DAO</outputType>
-		<outputPath>build/dao</outputPath>
+		<outputPath>target/dao</outputPath>
 		<useSurrogatesId>false</useSurrogatesId>
 	</settings>
 	<entities>
