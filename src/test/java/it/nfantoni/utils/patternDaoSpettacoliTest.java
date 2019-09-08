@@ -13,6 +13,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
@@ -146,12 +148,12 @@ public class patternDaoSpettacoliTest {
         Dao dao = new Dao();
         dao.work(settings,entities);
 
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/DAOFactory.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/DAOFactory.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/SpettacoloDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/SpettacoloDAO.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/TeatroDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/TeatroDAO.java")).getFile())));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/DAOFactory.java",
+                "target/dao/src/dao/DAOFactory.java"));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/SpettacoloDAO.java",
+                "target/dao/src/dao/SpettacoloDAO.java"));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/TeatroDAO.java",
+                "target/dao/src/dao/TeatroDAO.java"));
 
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2DAOFactory.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2DAOFactory.java")).getFile())));
@@ -171,4 +173,16 @@ public class patternDaoSpettacoliTest {
 
 
 
+    private Boolean checkContent(String pathExpected, String pathActual) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File expected =  new File(Objects.requireNonNull(classLoader.getResource(pathExpected)).getFile());
+        File actual = new File(pathActual);
+
+        String expectedString = new String(Files.readAllBytes(Paths.get(expected.getAbsolutePath())))
+                .replace("\n", "").replace("\r", "");
+        String actualString = new String(Files.readAllBytes( Paths.get(actual.getAbsolutePath())))
+                .replace("\n", "").replace("\r", "");
+        return expectedString.equals(actualString);
+
+    }
 }

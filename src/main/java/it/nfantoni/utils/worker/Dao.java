@@ -108,4 +108,8 @@ public class Dao implements Worker {
 
     }
 
+    private void writeEntityDTO(){
+
+    }
+
 }
