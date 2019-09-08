@@ -155,6 +155,11 @@ public class patternDaoSpettacoliTest {
         assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/TeatroDAO.java",
                 "target/dao/src/dao/TeatroDAO.java"));
 
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/TeatroDTO.java",
+                "target/dao/src/dao/TeatroDTO.java"));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/SpettacoloDTO.java",
+                "target/dao/src/dao/SpettacoloDTO.java"));
+
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2DAOFactory.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2DAOFactory.java")).getFile())));
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2SpettacoloDAO.java"),
@@ -162,16 +167,7 @@ public class patternDaoSpettacoliTest {
         assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2TeatroDAO.java"),
                 new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2TeatroDAO.java")).getFile())));
 
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/DAOTest.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/DAOTest.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/SpettacoloDTO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/SpettacoloDTO.java")).getFile())));
-
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/TeatroDTO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/TeatroDTO.java")).getFile())));
     }
-
-
 
     private Boolean checkContent(String pathExpected, String pathActual) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();

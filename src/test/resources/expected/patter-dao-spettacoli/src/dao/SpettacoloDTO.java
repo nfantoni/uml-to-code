@@ -6,7 +6,7 @@ public class SpettacoloDTO {
 
 	private String codiceSpettacolo;
 	private String nomeArtista;
-	private long data;
+	private Date data;
 	private String genere;
 	private String nomeTeatro;
 
@@ -14,43 +14,24 @@ public class SpettacoloDTO {
 
 	}
 
-	public String getCodiceSpettacolo() {
-		return codiceSpettacolo;
-	}
+	public String getCodiceSpettacolo() { return codiceSpettacolo; }
 
-	public void setCodiceSpettacolo(String codiceSpettacolo) {
-		this.codiceSpettacolo = codiceSpettacolo;
-	}
+	public void  setCodiceSpettacolo(String codiceSpettacolo) { this.codiceSpettacolo = codiceSpettacolo; }
 
-	public String getNomeArtista() {
-		return nomeArtista;
-	}
+	public String getNomeArtista() { return nomeArtista; }
 
-	public void setNomeArtista(String nomeArtista) {
-		this.nomeArtista = nomeArtista;
-	}
+	public void  setNomeArtista(String nomeArtista) { this.nomeArtista = nomeArtista; }
 
-	public long getData() {
-		return data;
-	}
+	public Date getData() { return data; }
 
-	public void setData(long data) {
-		this.data = data;
-	}
+	public void  setData(Date data) { this.data = data; }
 
-	public String getGenere() {
-		return genere;
-	}
+	public String getGenere() { return genere; }
 
-	public void setGenere(String genere) {
-		this.genere = genere;
-	}
+	public void  setGenere(String genere) { this.genere = genere; }
 
-	public String getNomeTeatro() {
-		return nomeTeatro;
-	}
+	public String getNomeTeatro() { return nomeTeatro; }
 
-	public void setNomeTeatro(String nomeTeatro) {
-		this.nomeTeatro = nomeTeatro;
-	}
+	public void setNomeTeatro() { this.nomeTeatro = nomeTeatro; }
+
 }

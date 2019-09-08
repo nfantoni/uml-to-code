@@ -10,27 +10,16 @@ public class TeatroDTO {
 
 	}
 
-	public String getNome() {
-		return nome;
-	}
+	public String getNome() { return nome; }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+	public void  setNome(String nome) { this.nome = nome; }
 
-	public String getIndirizzo() {
-		return indirizzo;
-	}
+	public String getIndirizzo() { return indirizzo; }
 
-	public void setIndirizzo(String indirizzo) {
-		this.indirizzo = indirizzo;
-	}
+	public void  setIndirizzo(String indirizzo) { this.indirizzo = indirizzo; }
 
-	public int getCapienza() {
-		return capienza;
-	}
+	public int getCapienza() { return capienza; }
 
-	public void setCapienza(int capienza) {
-		this.capienza = capienza;
-	}
+	public void  setCapienza(int capienza) { this.capienza = capienza; }
+
 }
