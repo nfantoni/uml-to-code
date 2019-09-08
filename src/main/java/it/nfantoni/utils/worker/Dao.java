@@ -29,7 +29,7 @@ public class Dao implements Worker {
     private static final String CLOSE_FUNCTION = "; }\n\n";
     private static final String DTO_OVERRIDE_PLACEHOLDR ="{$dto-override}";
     private static final String IMPORT_DAO_PLACEHOLDER = "{$import-dao}";
-
+    private static final String IMPORT_DAO = "import dao.";
 
     private List<Entity> entityList;
     private Settings settings;
@@ -209,7 +209,7 @@ public class Dao implements Worker {
         StringBuilder stringBuilderOverride = new StringBuilder();
 
         entityList.forEach(entity -> {
-            stringBuilderImport.append("import dao.").append(entity.getName()).append("DAO;\n");
+            stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;\n");
             stringBuilderOverride.append("\t@Override\n\tpublic ").append(entity.getName())
             .append("DAO get").append(entity.getName())
                     .append("DAO() { return new Db2").append(entity.getName()).append("DAO(); }\n\n");
@@ -236,10 +236,10 @@ public class Dao implements Worker {
 
         entityList.forEach(entity -> {
                 StringBuilder stringBuilderImport = new StringBuilder();
-                stringBuilderImport.append("import dao.").append(entity.getName()).append("DAO;\n");
-                stringBuilderImport.append("import dao.").append(entity.getName()).append("DTO;\n");
+                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;\n");
+                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DTO;\n");
                 entity.getAssociations().forEach(association ->
-                        stringBuilderImport.append("import dao.").append(association.getClassName()).append("DTO;\n"));
+                        stringBuilderImport.append(IMPORT_DAO).append(association.getClassName()).append("DTO;\n"));
 
 
                 //write class for entity

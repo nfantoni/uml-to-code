@@ -2,7 +2,6 @@ package it.nfantoni.utils.sql;
 
 import it.nfantoni.utils.entities.Attributes;
 import it.nfantoni.utils.entities.Entity;
-import it.nfantoni.utils.string.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,12 +44,12 @@ public class SqlUtilities {
         entity.getAssociations().stream().filter(item -> item.getMultiplicity().equals("*")).forEach(ass ->
                 entityList.stream().filter(ent -> ent.getName().equals(ass.getClassName()))
                         .forEach(it -> it.getAttributes().stream()
-                                .filter(Attributes::getPrimaryKey).forEach(attributes -> {
+                                .filter(Attributes::getPrimaryKey).forEach(attributes ->
                                     result.append(attributes.getName().toUpperCase()).append(it.getName().toUpperCase())
                                             .append(" ").append(attributes.getSqlType()).append( " NOT NULL REFERENCES ")
                                             .append(it.getName().toUpperCase()).append("(")
-                                            .append(attributes.getName().toUpperCase()).append("), ");
-                                })
+                                            .append(attributes.getName().toUpperCase()).append("), ")
+                                )
 
                         )
 
