@@ -198,36 +198,4 @@ public class Db2TeatroDAO implements TeatroDAO {
 		return result;
 	}
 
-	@Override
-	public String metodo() {
-		String result = null;
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-
-			String q = "with table(nome, numspettacoli) "
-					+ "as ( select t.nome as nome, count(*) as numspettacoli"
-					+ " from teatro as t, spettacolo as s "
-					+ "where t.nome=s.nometeatro "
-					+ "and s.genere= 'balletto' group by t.nome ) "
-					+ "select nome from table "
-					+ "where numspettacoli=(select max(numspettacoli) from table)";
-
-			PreparedStatement prep_stmt = conn.prepareStatement(q);
-			prep_stmt.clearParameters();
-			ResultSet rs = prep_stmt.executeQuery();
-
-			if (rs.next()) {
-				result = rs.getString(1);
-			}
-
-			rs.close();
-			prep_stmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
-
 }

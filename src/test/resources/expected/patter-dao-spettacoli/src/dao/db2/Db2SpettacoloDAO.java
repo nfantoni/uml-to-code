@@ -70,7 +70,7 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 			prep_stmt.clearParameters();
 			prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
 			prep_stmt.setString(2, spettacolo.getNomeArtista());
-			prep_stmt.setLong(3, spettacolo.getData());
+			prep_stmt.setDate(3, spettacolo.getData());
 			prep_stmt.setString(4, spettacolo.getGenere());
 			prep_stmt.setString(5, spettacolo.getNomeTeatro());
 
@@ -105,7 +105,7 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 				entry.setGenere(rs.getString(GENERE));
 				entry.setNomeArtista(rs.getString(NOMEARTISTA));
 				entry.setNomeTeatro(rs.getString(NOMETEATRO));
-				entry.setData(rs.getLong(DATA));
+				entry.setData(rs.getDate(DATA));
 
 				result = entry;
 			}
@@ -135,7 +135,7 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 			prep_stmt.clearParameters();
 			prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
 			prep_stmt.setString(2, spettacolo.getNomeArtista());
-			prep_stmt.setLong(3, spettacolo.getData());
+			prep_stmt.setDate(3, spettacolo.getData());
 			prep_stmt.setString(4, spettacolo.getGenere());
 			prep_stmt.setString(5, spettacolo.getNomeTeatro());
 
@@ -209,33 +209,6 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 		} catch (Exception e) {
 			System.out.println("dropTable(): failed to drop table '" + TABLE
 					+ "': " + e.getMessage());
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
-
-	@Override
-	public List<String> metodo() {
-		List<String> result = new ArrayList<String>();
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-
-			String q = "select s.genere " + "from teatro t, spettacolo s"
-					+ " where t.nome=s.nometeatro " + "group by s.genere";
-
-			PreparedStatement prep_stmt = conn.prepareStatement(q);
-			prep_stmt.clearParameters();
-			ResultSet rs = prep_stmt.executeQuery();
-
-			while (rs.next()) {
-				result.add(rs.getString(1));
-			}
-
-			rs.close();
-			prep_stmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			Db2DAOFactory.closeConnection(conn);
 		}

@@ -27,6 +27,9 @@ public class Dao implements Worker {
     private static final String CLOSE_METHODS = ");\n\n";
     private static final String PUBLIC = "\tpublic ";
     private static final String CLOSE_FUNCTION = "; }\n\n";
+    private static final String DTO_OVERRIDE_PLACEHOLDR ="{$dto-override}";
+    private static final String IMPORT_DAO_PLACEHOLDER = "{$import-dao}";
+
 
     private List<Entity> entityList;
     private Settings settings;
@@ -41,11 +44,12 @@ public class Dao implements Worker {
 
         File directory = new File(settings.getOutputPath());
         if (!directory.mkdirs())
-            throw new IOException("Directory non creata");
+            throw new IOException("Directory output non creata");
 
         writeDaoFactory();
         writeEntityDao();
         writeEntityDTO();
+        writeDb2DaoFactory();
     }
 
     private void writeDaoFactory() throws IOException {
@@ -184,7 +188,8 @@ public class Dao implements Worker {
 
             stringBuilder.append("}");
 
-            try (PrintWriter out = new PrintWriter(daoSrcDir.getPath() + "/" + it.getName() + "DTO.java")) {
+            try (PrintWriter out = new PrintWriter(daoSrcDir.getPath()
+                    + "/" + it.getName() + "DTO.java")) {
                 out.println(stringBuilder.toString());
             } catch (FileNotFoundException e) {
                 logger.log(Level.WARNING, e.getMessage());
@@ -194,4 +199,55 @@ public class Dao implements Worker {
 
     }
 
+    private void writeDb2DaoFactory() throws IOException {
+
+        File directoryDB2 = new File(daoSrcDir.getPath() + "/db2");
+        if (!directoryDB2.mkdirs())
+            throw new IOException("Directory db2 non creata");
+
+        StringBuilder stringBuilderImport = new StringBuilder();
+        StringBuilder stringBuilderOverride = new StringBuilder();
+
+        entityList.forEach(entity -> {
+            stringBuilderImport.append("import dao.").append(entity.getName()).append("DAO;\n");
+            stringBuilderOverride.append("\t@Override\n\tpublic ").append(entity.getName())
+            .append("DAO get").append(entity.getName())
+                    .append("DAO() { return new Db2").append(entity.getName()).append("DAO(); }\n\n");
+                }
+        );
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File daoFactoryTemplateFile = new File(Objects.requireNonNull(
+                classLoader.getResource("dao/db2-dao-factory-template.java")).getFile());
+
+        String daoFactoryTemplate = new String(Files.readAllBytes(Paths.get(daoFactoryTemplateFile.getAbsolutePath())));
+        daoFactoryTemplate = daoFactoryTemplate
+                .replace(DTO_OVERRIDE_PLACEHOLDR, stringBuilderOverride.toString())
+                .replace(IMPORT_DAO_PLACEHOLDER, stringBuilderImport.toString());
+
+        try (PrintWriter out = new PrintWriter(daoSrcDir.getPath() + "/db2/Db2DAOFactory.java")) {
+            out.println(daoFactoryTemplate);
+        } catch (FileNotFoundException e) {
+            logger.log(Level.WARNING, e.getMessage());
+        }
+    }
+
+    public void writeDb2DaoEntity(){
+
+        entityList.forEach(entity -> {
+                StringBuilder stringBuilderImport = new StringBuilder();
+                stringBuilderImport.append("import dao.").append(entity.getName()).append("DAO;\n");
+                stringBuilderImport.append("import dao.").append(entity.getName()).append("DTO;\n");
+                entity.getAssociations().forEach(association ->
+                        stringBuilderImport.append("import dao.").append(association.getClassName()).append("DTO;\n"));
+
+
+                //write class for entity
+                StringBuilder body = new StringBuilder();
+
+                body.append("public class Db2").append(entity.getName()).append("DAO implements ").append(entity.getName()).append("DAO {\n\n");
+
+                }
+        );
+    }
 }

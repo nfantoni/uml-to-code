@@ -1,9 +1,7 @@
 package dao.db2;
 
 import dao.DAOFactory;
-import dao.TeatroDAO;
-import dao.SpettacoloDAO;
-
+{$import-dao}
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -87,13 +85,6 @@ public class Db2DAOFactory extends DAOFactory {
 
     // --------------------------------------------
 
-    	@Override
-	public TeatroDAO getTeatroDAO() { return new Db2TeatroDAO(); }
-
-	@Override
-	public SpettacoloDAO getSpettacoloDAO() { return new Db2SpettacoloDAO(); }
-
-
+    {$dto-override}
 
 }
-
