@@ -57,8 +57,34 @@ public class sqlUtilitiesTest {
 
         });
 
-        assertEquals(createSpettacoloExpected,createSpettacolo.toString());
+        assertEquals(createSpettacoloExpected, createSpettacolo.toString());
         assertEquals(createTeatroExpected, createTeatro.toString());
     }
+
+    @Test
+    public void entityToDropSqlTest() throws ParserConfigurationException, SAXException, IOException {
+
+        String dropSpettacoloExpected="DROP TABLE SPETTACOLO";
+        String dropTeatroExpected="DROP TABLE TEATRO";
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder dropTeatro=new StringBuilder();
+        StringBuilder dropSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                dropTeatro.append(SqlUtilities.sqlDrop(entity));
+            else
+                dropSpettacolo.append(SqlUtilities.sqlDrop(entity));
+
+        });
+
+        assertEquals(dropSpettacoloExpected, dropSpettacolo.toString());
+        assertEquals(dropTeatroExpected, dropTeatro.toString());
+    }
+
 
 }

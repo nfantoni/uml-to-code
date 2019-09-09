@@ -57,4 +57,9 @@ public class SqlUtilities {
 
         return result.toString().substring(0,result.toString().length()-2) + ")";
     }
+
+    public static String sqlDrop(Entity entity){
+        return "DROP TABLE " + entity.getName().toUpperCase();
+
+    }
 }

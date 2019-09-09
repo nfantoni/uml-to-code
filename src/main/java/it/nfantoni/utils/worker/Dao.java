@@ -50,6 +50,7 @@ public class Dao implements Worker {
         writeEntityDao();
         writeEntityDTO();
         writeDb2DaoFactory();
+        writeDb2DaoEntity();
     }
 
     private void writeDaoFactory() throws IOException {
