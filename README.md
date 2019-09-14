@@ -1,13 +1,13 @@
 # uml-to-code
 
-##Generate java code from xml uml description
+## Generate java code from xml uml description
 
 Based on the "Mapping UML diagram to XML" work by Jitender Singh for JNU that you can find 
 on [docs/utx_doc.pdf](docs/utx_doc.pdf).  
 The purpose of this project is take the xml rapresentation of uml diagram and generate 
 the relative java code that implement the CRUD access for various database pattern access.
 
-###The mapping
+### The mapping
 
 To map a Uml we need to descripbe the output in a settings section and map the entity in a entities section.  
 The setting section is composed of:
@@ -27,7 +27,7 @@ The entities block have to collect the entity description composed with:
         - _null_ attribute : boolean value indicate the associated column allow null value or not
         - _primaryKey_ attribute : boolean value indicate the associated column is primary key for the table
 
-##Pattern DAO
+## Pattern DAO
 
 With this example diagram:
 
