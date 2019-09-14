@@ -125,4 +125,39 @@ public class SqlUtilities {
 
         return result.toString();
     }
+
+    public static String sqlRead(Entity entity){
+
+        return "SELECT * FROM " + entity.getName().toUpperCase();
+    }
+
+    public static String sqlUpdate(Entity entity, List<Entity> entityList){
+        StringBuilder result = new StringBuilder();
+
+        result.append("UPDATE ").append(entity.getName().toUpperCase()).append(" SET ");
+
+        entity.getAttributes().forEach(attributes ->
+                    result.append(attributes.getName().toUpperCase()).append(" = ?, ")
+
+
+        );
+
+        entity.getAssociations().stream().filter(item -> item.getMultiplicity().equals("*")).forEach(ass ->
+                entityList.stream().filter(ent -> ent.getName().equals(ass.getClassName()))
+                        .forEach(it -> it.getAttributes().stream()
+                                .filter(Attributes::getPrimaryKey).forEach(attributes ->
+                                            result.append(attributes.getName().toUpperCase()).
+                                                    append(it.getName().toUpperCase()).append(" = ?, ")
+
+
+                                )
+                        )
+        );
+
+        return result.toString().substring(0,result.toString().length()-2) +
+                " WHERE " + entity.getAttributes().stream()
+                .filter(Attributes::getPrimaryKey)
+                .findFirst().map(Attributes::getName)
+                .orElse("<key not found>").toUpperCase() + " = ?";
+    }
 }

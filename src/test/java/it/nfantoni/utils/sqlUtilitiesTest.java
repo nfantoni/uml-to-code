@@ -164,4 +164,56 @@ public class sqlUtilitiesTest {
         assertEquals(selectTeatroExpected, selectTeatro.toString());
     }
 
+    @Test
+    public void entityToReadSql() throws ParserConfigurationException, SAXException, IOException {
+
+        String selectSpettacoloExpected="SELECT * FROM SPETTACOLO";
+        String selectTeatroExpected="SELECT * FROM TEATRO";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder selectTeatro=new StringBuilder();
+        StringBuilder selectSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                selectTeatro.append(SqlUtilities.sqlRead(entity));
+            else
+                selectSpettacolo.append(SqlUtilities.sqlRead(entity));
+
+        });
+
+        assertEquals(selectSpettacoloExpected, selectSpettacolo.toString());
+        assertEquals(selectTeatroExpected, selectTeatro.toString());
+    }
+
+    @Test
+    public void entityToUpdateSql() throws ParserConfigurationException, SAXException, IOException {
+
+        String updateSpettacoloExpected="UPDATE SPETTACOLO SET CODICESPETTACOLO = ?, NOMEARTISTA = ?, DATA = ?, GENERE = ?, NOMETEATRO = ? WHERE CODICESPETTACOLO = ?";
+        String updateTeatroExpected="UPDATE TEATRO SET NOME = ?, INDIRIZZO = ?, CAPIENZA = ? WHERE NOME = ?";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder updateTeatro=new StringBuilder();
+        StringBuilder updateSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                updateTeatro.append(SqlUtilities.sqlUpdate(entity, entities));
+            else
+                updateSpettacolo.append(SqlUtilities.sqlUpdate(entity, entities));
+
+        });
+
+        assertEquals(updateSpettacoloExpected, updateSpettacolo.toString());
+        assertEquals(updateTeatroExpected, updateTeatro.toString());
+    }
+
 }
