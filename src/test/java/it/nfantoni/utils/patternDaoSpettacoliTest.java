@@ -103,9 +103,9 @@ public class patternDaoSpettacoliTest {
         assertTrue(!entities.get(1).getAttributes().get(3).getPrimaryKey());
 
         assertEquals("Spettacolo", entities.get(0).getAssociations().get(0).getClassName());
-        assertEquals("*", entities.get(0).getAssociations().get(0).getMultiplicity());
+        assertEquals("1", entities.get(0).getAssociations().get(0).getMultiplicity());
         assertEquals("Teatro", entities.get(1).getAssociations().get(0).getClassName());
-        assertEquals("1", entities.get(1).getAssociations().get(0).getMultiplicity());
+        assertEquals("*", entities.get(1).getAssociations().get(0).getMultiplicity());
 	}
 
 	@Test

@@ -35,7 +35,7 @@ public class Db2TeatroDAO implements TeatroDAO {
 
 	// INSERT ELEMENT
 
-	static String insert = "INSERT INTO TEATRO (NOME , INDIRIZZO , CAPIENZA ) VALUES (?,?,?) ";
+	static String insert = "INSERT INTO TEATRO (NOME , INDIRIZZO , CAPIENZA ) VALUES (?,?,?)";
 
 	// DELETE ELEMENT
 

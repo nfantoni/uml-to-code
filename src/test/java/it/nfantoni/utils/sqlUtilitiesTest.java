@@ -86,5 +86,30 @@ public class sqlUtilitiesTest {
         assertEquals(dropTeatroExpected, dropTeatro.toString());
     }
 
+    @Test
+    public void entityToInsertSql() throws ParserConfigurationException, SAXException, IOException {
+
+        String insertSpettacoloExpected="INSERT INTO SPETTACOLO (CODICESPETTACOLO , NOMEARTISTA , DATA , GENERE , NOMETEATRO ) VALUES (?,?,?,?,?)";
+        String insertTeatroExpected="INSERT INTO TEATRO (NOME , INDIRIZZO , CAPIENZA ) VALUES (?,?,?)";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder insertTeatro=new StringBuilder();
+        StringBuilder insertSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                insertTeatro.append(SqlUtilities.sqlInsert(entity, entities));
+            else
+                insertSpettacolo.append(SqlUtilities.sqlInsert(entity, entities));
+
+        });
+
+        assertEquals(insertSpettacoloExpected, insertSpettacolo.toString());
+        assertEquals(insertTeatroExpected, insertTeatro.toString());
+    }
 
 }

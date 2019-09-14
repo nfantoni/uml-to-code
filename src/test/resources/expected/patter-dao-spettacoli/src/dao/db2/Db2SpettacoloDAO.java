@@ -44,7 +44,7 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 
 	// INSERT ELEMENT
 
-	static String insert = "INSERT INTO SPETTACOLO (CODICESPETTACOLO , NOMEARTISTA , DATA , GENERE , NOMETEATRO ) VALUES (?,?,?,?,?) ";
+	static String insert = "INSERT INTO SPETTACOLO (CODICESPETTACOLO , NOMEARTISTA , DATA , GENERE , NOMETEATRO ) VALUES (?,?,?,?,?)";
 
 	// DELETE ELEMENT
 
