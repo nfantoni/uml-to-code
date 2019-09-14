@@ -1,5 +1,6 @@
 package it.nfantoni.utils.worker;
 
+import it.nfantoni.utils.entities.Association;
 import it.nfantoni.utils.entities.Attributes;
 import it.nfantoni.utils.entities.Entity;
 import it.nfantoni.utils.settings.Settings;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,13 +26,13 @@ public class Dao implements Worker {
 
     private static final String ABSTRACT_DAO_PLACEHOLDER = "{$abstract-dao}";
     private static final String SRC_DIRECTORY = "src/dao";
-    private static final String CLOSE_METHODS = ");\n\n";
-    private static final String PUBLIC = "\tpublic ";
-    private static final String CLOSE_FUNCTION = "; }\n\n";
+    private static final String CLOSE_METHODS = ");" + System.lineSeparator() + System.lineSeparator();
+    private static final String PUBLIC = "    public ";
+    private static final String CLOSE_FUNCTION = "; }" + System.lineSeparator() + System.lineSeparator();
     private static final String DTO_OVERRIDE_PLACEHOLDR ="{$dto-override}";
     private static final String IMPORT_DAO_PLACEHOLDER = "{$import-dao}";
     private static final String IMPORT_DAO = "import dao.";
-
+    private static final String TAB ="    ";
     private List<Entity> entityList;
     private Settings settings;
     private File daoSrcDir = null;
@@ -61,7 +63,8 @@ public class Dao implements Worker {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        entityList.forEach(it -> stringBuilder.append("    public abstract ").append(it.getName()).append("DAO get").append(it.getName()).append("DAO();\n"));
+        entityList.forEach(it -> stringBuilder.append("    public abstract ")
+                .append(it.getName()).append("DAO get").append(it.getName()).append("DAO();").append(System.lineSeparator()));
 
         ClassLoader classLoader = getClass().getClassLoader();
         File daoFactoryTemplateFile = new File(Objects.requireNonNull(classLoader.getResource("dao/dao-factory-template.java")).getFile());
@@ -80,9 +83,9 @@ public class Dao implements Worker {
         entityList.forEach(it -> {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.append("package dao;\n\n");
-            stringBuilder.append("public interface ").append(it.getName()).append("DAO {\n\n");
-            stringBuilder.append("    // --- CRUD -------------\n\n");
+            stringBuilder.append("package dao;").append(System.lineSeparator()).append(System.lineSeparator());
+            stringBuilder.append("public interface ").append(it.getName()).append("DAO {").append(System.lineSeparator()).append(System.lineSeparator());
+            stringBuilder.append("    // --- CRUD -------------").append(System.lineSeparator()).append(System.lineSeparator());
             stringBuilder.append("    public void create(").append(it.getName()).append("DTO ").append(StringUtils.decapitalize(it.getName())).append(CLOSE_METHODS);
 
             final Optional<Attributes> attributes = it.getAttributes().stream().filter(Attributes::getPrimaryKey).findFirst();
@@ -100,11 +103,11 @@ public class Dao implements Worker {
                     .append(SqlUtilities.javaType(attributes1.getSqlType()))
                     .append(" ").append(StringUtils.decapitalize(attributes1.getName())).append(CLOSE_METHODS));
 
-            stringBuilder.append("    // ----------------------------------\n\n");
+            stringBuilder.append("    // ----------------------------------").append(System.lineSeparator()).append(System.lineSeparator());
 
-            stringBuilder.append("    public boolean createTable();\n\n");
+            stringBuilder.append("    public boolean createTable();").append(System.lineSeparator()).append(System.lineSeparator());
 
-            stringBuilder.append("    public boolean dropTable();\n}");
+            stringBuilder.append("    public boolean dropTable();}").append(System.lineSeparator());
 
             try (PrintWriter out = new PrintWriter(daoSrcDir.getPath() + "/" + it.getName() + "DAO.java")) {
                 out.println(stringBuilder.toString());
@@ -120,34 +123,36 @@ public class Dao implements Worker {
 
         entityList.forEach(it -> {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("package dao;\n\n");
+            stringBuilder.append("package dao;").append(System.lineSeparator()).append(System.lineSeparator());
 
             //check if present sqltype DATE
             if (it.getAttributes().stream().anyMatch(att -> att.getSqlType().contains("DATE")))
-                stringBuilder.append("import java.util.Date;\n\n");
+                stringBuilder.append("import java.util.Date;").append(System.lineSeparator()).append(System.lineSeparator());
 
-            stringBuilder.append("public class ").append(it.getName()).append("DTO {\n\n");
+            stringBuilder.append("public class ").append(it.getName()).append("DTO {").append(System.lineSeparator()).append(System.lineSeparator());
 
-            it.getAttributes().forEach(attributes -> stringBuilder.append("\tprivate ")
+            it.getAttributes().forEach(attributes -> stringBuilder.append("    private ")
                     .append(SqlUtilities.javaType(attributes.getSqlType())).append(" ")
-                    .append(StringUtils.decapitalize(attributes.getName())).append(";\n"));
+                    .append(StringUtils.decapitalize(attributes.getName())).append(";").append(System.lineSeparator()));
 
             it.getAssociations().stream().filter(item -> item.getMultiplicity().equals("*")).forEach(ass ->
                     entityList.stream().filter(ent -> ent.getName().equals(ass.getClassName()))
                             .forEach(entity -> entity.getAttributes().stream()
                                     .filter(Attributes::getPrimaryKey).forEach(attributes ->
-                                            stringBuilder.append("\tprivate ")
+                                            stringBuilder.append("    private ")
                                                     .append(SqlUtilities.javaType(attributes.getSqlType())).append(" ")
-                                                    .append(StringUtils.decapitalize(attributes.getName())).append(entity.getName()).append(";\n")
+                                                    .append(StringUtils.decapitalize(attributes.getName()))
+                                                    .append(entity.getName()).append(";").append(System.lineSeparator())
                                     )
 
                             )
 
             );
 
-            stringBuilder.append("\n").append(PUBLIC).append(it.getName()).append("DTO() {\n" +
-                    "\n" +
-                    "\t}\n\n");
+            stringBuilder.append(System.lineSeparator())
+                    .append(PUBLIC).append(it.getName()).append("DTO() {" + System.lineSeparator()
+                     + System.lineSeparator() +
+                    "    }").append(System.lineSeparator()).append(System.lineSeparator());
 
             it.getAttributes().forEach(attributes -> {
                 stringBuilder.append(PUBLIC)
@@ -157,12 +162,13 @@ public class Dao implements Worker {
                         .append("() { return ").append(StringUtils.decapitalize(attributes.getName()))
                         .append(CLOSE_FUNCTION);
 
-                stringBuilder.append("\tpublic void ")
+                stringBuilder.append("    public void ")
                         .append(" set")
                         .append(attributes.getName()).append("(")
                         .append(SqlUtilities.javaType(attributes.getSqlType()))
                         .append(" ").append(StringUtils.decapitalize(attributes.getName())).append(") { this.")
-                        .append(StringUtils.decapitalize(attributes.getName())).append(" = ").append(StringUtils.decapitalize(attributes.getName()))
+                        .append(StringUtils.decapitalize(attributes.getName())).append(" = ")
+                        .append(StringUtils.decapitalize(attributes.getName()))
                         .append(CLOSE_FUNCTION);
 
             });
@@ -176,7 +182,7 @@ public class Dao implements Worker {
                                                 .append("() { return ").append(StringUtils.decapitalize(attributes.getName()))
                                                 .append(entity.getName()).append(CLOSE_FUNCTION);
 
-                                        stringBuilder.append("\tpublic void set").append(attributes.getName()).append(entity.getName())
+                                        stringBuilder.append("    public void set").append(attributes.getName()).append(entity.getName())
                                                 .append("() { this.").append(StringUtils.decapitalize(attributes.getName()))
                                                 .append(entity.getName()).append(" = ")
                                                 .append(StringUtils.decapitalize(attributes.getName()))
@@ -210,10 +216,11 @@ public class Dao implements Worker {
         StringBuilder stringBuilderOverride = new StringBuilder();
 
         entityList.forEach(entity -> {
-            stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;\n");
-            stringBuilderOverride.append("\t@Override\n\tpublic ").append(entity.getName())
+            stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;").append(System.lineSeparator());
+            stringBuilderOverride.append("    @Override").append(System.lineSeparator()).append("    public ").append(entity.getName())
             .append("DAO get").append(entity.getName())
-                    .append("DAO() { return new Db2").append(entity.getName()).append("DAO(); }\n\n");
+                    .append("DAO() { return new Db2").append(entity.getName()).append("DAO(); }")
+                    .append(System.lineSeparator()).append(System.lineSeparator());
                 }
         );
 
@@ -233,22 +240,108 @@ public class Dao implements Worker {
         }
     }
 
-    public void writeDb2DaoEntity(){
+    public void writeDb2DaoEntity() throws IOException{
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File daoFactoryTemplateFile = new File(Objects.requireNonNull(
+                classLoader.getResource("dao/db2-dao-template.java")).getFile());
+        String db2DaoTemplate = new String(Files.readAllBytes(Paths.get(daoFactoryTemplateFile.getAbsolutePath())));
 
         entityList.forEach(entity -> {
+
+            String entityTemplate = db2DaoTemplate;
+
+            StringBuilder preparedUpdate = new StringBuilder();
+
                 StringBuilder stringBuilderImport = new StringBuilder();
-                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;\n");
-                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DTO;\n");
+                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DAO;").append(System.lineSeparator());
+                stringBuilderImport.append(IMPORT_DAO).append(entity.getName()).append("DTO;").append(System.lineSeparator());
                 entity.getAssociations().forEach(association ->
-                        stringBuilderImport.append(IMPORT_DAO).append(association.getClassName()).append("DTO;\n"));
+                        stringBuilderImport.append(IMPORT_DAO).append(association.getClassName())
+                                .append("DTO;").append(System.lineSeparator()));
+
+                String entityKeyType = entity.getAttributes().stream()
+                        .filter(Attributes::getPrimaryKey).findFirst()
+                        .map(it -> SqlUtilities.javaType(it.getSqlType())).toString();
+
+                String entityKey = entity.getAttributes().stream()
+                        .filter(Attributes::getPrimaryKey).findFirst()
+                        .map(Attributes::getName).toString();
+
+            final AtomicInteger index = new AtomicInteger(1);
+
+            entityTemplate = entityTemplate.replace("{$import-dao-class}", stringBuilderImport.toString())
+                    .replace("{$entity-name}", entity.getName())
+                    .replace("{$entity-name-lower}", StringUtils.decapitalize(entity.getName()))
+            .replace("{$entity-key}",entityKey).replace("{$entity-key-type}",entityKeyType);;
+
+                StringBuilder initializer = new StringBuilder();
+
+                initializer.append("    // Definisco nome tabella").append(System.lineSeparator()).append(System.lineSeparator())
+                        .append(TAB).append("static final String TABLE = \"").append(entity.getName().toUpperCase()).append("\";")
+                        .append(System.lineSeparator()).append(System.lineSeparator())
+                        .append(TAB).append("// Definisco parametri tabella")
+                        .append(System.lineSeparator()).append(System.lineSeparator());
+
+                entity.getAttributes().forEach(attributes ->{
+                        initializer.append(TAB).append("static final String ")
+                                .append(attributes.getName().toUpperCase())
+                                .append( " = ")
+                                .append(attributes.getName().toUpperCase()).append(";")
+                                .append(System.lineSeparator());
+                        preparedUpdate.append(TAB).append("prep_stmt.set")
+                                .append(SqlUtilities.javaType(attributes.getSqlType()))
+                                .append("(").append(index).append(", ")
+                        .append(StringUtils.decapitalize(entity.getName())).append(".get")
+                                .append(attributes.getName()).append("());").append(System.lineSeparator());
+                        index.getAndAdd(1);
+                        });
+                entity.getAssociations().stream()
+                        .filter(association -> association.getMultiplicity().equals("*"))
+                        .forEach(association ->
+                            entityList.stream().filter(ent->ent.getName().equals(association.getClassName()))
+                                    .forEach(ent -> ent.getAttributes().stream().filter(Attributes::getPrimaryKey)
+                                    .forEach(attributes ->{
+                                                initializer.append(TAB).append("static final String ")
+                                                        .append(attributes.getName().toUpperCase())
+                                                        .append(ent.getName().toUpperCase())
+                                                        .append(" = \"")
+                                                        .append(attributes.getName().toUpperCase())
+                                                        .append(ent.getName().toUpperCase()).append("\";")
+                                                        .append(System.lineSeparator());
+                                        preparedUpdate.append(TAB).append("prep_stmt.set")
+                                                .append(SqlUtilities.javaType(attributes.getSqlType()))
+                                                .append("(").append(index).append(", ")
+                                                .append(StringUtils.decapitalize(entity.getName())).append(".get")
+                                                .append(attributes.getName()).append("());").append(System.lineSeparator());
+                                        index.getAndAdd(1);
+                                            }
+
+                                    ))
+                        );
 
 
-                //write class for entity
-                StringBuilder body = new StringBuilder();
+                preparedUpdate.append(TAB).append("prep_stmt.set").append(entityKeyType).append("(").append(index).append(", ")
+                        .append(StringUtils.decapitalize(entity.getName())).append(".get")
+                        .append(entityKey).append("());").append(System.lineSeparator());
 
-                body.append("public class Db2").append(entity.getName()).append("DAO implements ").append(entity.getName()).append("DAO {\n\n");
+            entityTemplate = entityTemplate.replace("{$initializer}", initializer.toString());
+
+            entityTemplate = entityTemplate.replace("{sql-create}", SqlUtilities.sqlCreate(entity, entityList));
+            entityTemplate = entityTemplate.replace("{sql-drop}", SqlUtilities.sqlDrop(entity));
+            entityTemplate = entityTemplate.replace("{sql-insert}", SqlUtilities.sqlInsert(entity,entityList));
+            entityTemplate = entityTemplate.replace("{sql-delete}", SqlUtilities.sqlDelete(entity));
+            entityTemplate = entityTemplate.replace("{sql-read-by-id}", SqlUtilities.sqlReadById(entity));
+            entityTemplate = entityTemplate.replace("{sql-read}", SqlUtilities.sqlRead(entity));
+            entityTemplate = entityTemplate.replace("{sql-update}", SqlUtilities.sqlUpdate(entity, entityList));
+            entityTemplate = entityTemplate.replace("{$prepared-update}", preparedUpdate.toString());
+
+
+
+
 
                 }
+
         );
     }
 }
