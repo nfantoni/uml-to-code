@@ -89,4 +89,40 @@ public class SqlUtilities {
         return result.toString().substring(0,result.toString().length()-2) +
                 ") VALUES (" + value.toString().substring(0, value.toString().length()-1) + ")";
     }
+
+    public static String sqlDelete(Entity entity){
+
+        StringBuilder result = new StringBuilder();
+
+        result.append("DELETE FROM ");
+        result.append(entity.getName().toUpperCase());
+        result.append(" WHERE ");
+        result.append(
+                entity.getAttributes().stream()
+                        .filter(Attributes::getPrimaryKey)
+                        .findFirst().map(Attributes::getName)
+                        .orElse("<key not found>").toUpperCase());
+        result.append(" = ?");
+
+
+        return result.toString();
+    }
+
+    public static String sqlReadById(Entity entity){
+
+        StringBuilder result = new StringBuilder();
+
+        result.append("SELECT * FROM ");
+        result.append(entity.getName().toUpperCase());
+        result.append(" WHERE ");
+        result.append(
+                entity.getAttributes().stream()
+                        .filter(Attributes::getPrimaryKey)
+                        .findFirst().map(Attributes::getName)
+                        .orElse("<key not found>").toUpperCase());
+        result.append(" = ?");
+
+
+        return result.toString();
+    }
 }

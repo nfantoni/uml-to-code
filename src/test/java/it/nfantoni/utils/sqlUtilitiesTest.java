@@ -112,4 +112,56 @@ public class sqlUtilitiesTest {
         assertEquals(insertTeatroExpected, insertTeatro.toString());
     }
 
+    @Test
+    public void entityToDeleteSql() throws ParserConfigurationException, SAXException, IOException {
+
+        String deleteSpettacoloExpected="DELETE FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
+        String deleteTeatroExpected="DELETE FROM TEATRO WHERE NOME = ?";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder deleteTeatro=new StringBuilder();
+        StringBuilder deleteSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                deleteTeatro.append(SqlUtilities.sqlDelete(entity));
+            else
+                deleteSpettacolo.append(SqlUtilities.sqlDelete(entity));
+
+        });
+
+        assertEquals(deleteSpettacoloExpected, deleteSpettacolo.toString());
+        assertEquals(deleteTeatroExpected, deleteTeatro.toString());
+    }
+
+    @Test
+    public void entityToReadByIdSql() throws ParserConfigurationException, SAXException, IOException {
+
+        String selectSpettacoloExpected="SELECT * FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
+        String selectTeatroExpected="SELECT * FROM TEATRO WHERE NOME = ?";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File fXmlFile = new File(Objects.requireNonNull(classLoader.getResource("pattern_dao_spettacoli.xml")).getFile());
+
+        List<Entity> entities = XmlUtils.readEntities(XmlUtils.readFile(fXmlFile));
+
+        StringBuilder selectTeatro=new StringBuilder();
+        StringBuilder selectSpettacolo = new StringBuilder();
+
+        entities.forEach(entity -> {
+            if(entity.getName().equals("Teatro"))
+                selectTeatro.append(SqlUtilities.sqlReadById(entity));
+            else
+                selectSpettacolo.append(SqlUtilities.sqlReadById(entity));
+
+        });
+
+        assertEquals(selectSpettacoloExpected, selectSpettacolo.toString());
+        assertEquals(selectTeatroExpected, selectTeatro.toString());
+    }
+
 }
