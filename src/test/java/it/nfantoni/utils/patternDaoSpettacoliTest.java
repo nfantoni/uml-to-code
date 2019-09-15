@@ -163,10 +163,10 @@ public class patternDaoSpettacoliTest {
         assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/db2/Db2DAOFactory.java",
                 "target/dao/src/dao/db2/Db2DAOFactory.java"));
 
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2SpettacoloDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2SpettacoloDAO.java")).getFile())));
-        assertTrue(FileUtils.contentEquals(new File("target/dao/src/dao/db2/Db2TeatroDAO.java"),
-                new File(Objects.requireNonNull(classLoader.getResource("expected/patter-dao-spettacoli/src/dao/db2/Db2TeatroDAO.java")).getFile())));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/db2/Db2SpettacoloDAO.java",
+                "target/dao/src/dao/db2/Db2SpettacoloDAO.java"));
+        assertTrue(checkContent("expected/patter-dao-spettacoli/src/dao/db2/Db2TeatroDAO.java",
+                "target/dao/src/dao/db2/Db2TeatroDAO.java"));
 
     }
 

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 {$import-dao-class}
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,65 +14,59 @@ import java.util.logging.Logger;
 
 public class Db2{$entity-name}DAO implements {$entity-name}DAO {
 
+        Logger logger = Logger.getLogger(getClass().getCanonicalName());
+
 {$initializer}
+        // == STATEMENT SQL
+        // ====================================================================
 
-    // == STATEMENT SQL
-    // ====================================================================
+        // CREATE TABLE
 
-    // CREATE TABLE
+        static String create = "{$sql-create}";
 
-    static String create = "{$sql-create}";
+        // DROP TABLE
 
-    // DROP TABLE
+        static String drop = "{$sql-drop}";
 
-    static String drop = "{$sql-drop}";
+        // INSERT ELEMENT
 
-    // INSERT ELEMENT
+        static String insert = "{$sql-insert}";
 
-    static String insert = "{$sql-insert}";
+        // DELETE ELEMENT
 
-    // DELETE ELEMENT
+        static String delete = "{$sql-delete}";
 
-    static String delete = "{$sql-delete}";
+        // SELECT ELEMENT
 
-    // SELECT ELEMENT
+        static String read_by_id = "{$sql-read-by-id}";
 
-    static String read_by_id = "{$sql-read-by-id}";
+        // QUERY ELEMENT
 
-    // QUERY ELEMENT
+        static String query = "{$sql-read}";
 
-    static String query = "{$sql-read}";
+        // UPDATE ELEMENT
 
-    // UPDATE ELEMENT
+        static String update = "{$sql-update}";
 
-    static String update = "{$sql-update}";
+        @Override
+        public void create({$entity-name}DTO {$entity-name-lower}) {
+            Connection conn = Db2DAOFactory.createConnection();
+            try {
+                PreparedStatement prep_stmt = conn.prepareStatement(insert);
+                prep_stmt.clearParameters();
+{$prepared-create}
+                prep_stmt.executeUpdate();
+                prep_stmt.close();
+            } catch (Exception e) {
+                System.out.println("create(): failed to insert entry: "
+                + e.getMessage());
+                e.printStackTrace();
+            }
 
-
-    @Override
-    public void create({$entity-name}DTO {$entity-name-lower}) {
-        Connection conn = Db2DAOFactory.createConnection();
-        try {
-            PreparedStatement prep_stmt = conn.prepareStatement(insert);
-            prep_stmt.clearParameters();
-            {$prepared-create}
-            prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
-            prep_stmt.setString(2, spettacolo.getNomeArtista());
-            prep_stmt.setDate(3, spettacolo.getData());
-            prep_stmt.setString(4, spettacolo.getGenere());
-            prep_stmt.setString(5, spettacolo.getNomeTeatro());
-
-            prep_stmt.executeUpdate();
-            prep_stmt.close();
-        } catch (Exception e) {
-            System.out.println("create(): failed to insert entry: "
-            + e.getMessage());
-            e.printStackTrace();
         }
 
-    }
-
     @Override
-    public {$entity-name}DTO read({$entity-key}) {
+    public {$entity-name}DTO read({$entity-key-type} {$entity-key}) {
         SpettacoloDTO result = null;
         if (codiceSpettacolo == null) {
             System.out
@@ -88,12 +81,8 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
             ResultSet rs = prep_stmt.executeQuery();
 
             if (rs.next()) {
-                SpettacoloDTO entry = new SpettacoloDTO();
-                entry.setCodiceSpettacolo(rs.getString(CODICESPETTACOLO));
-                entry.setGenere(rs.getString(GENERE));
-                entry.setNomeArtista(rs.getString(NOMEARTISTA));
-                entry.setNomeTeatro(rs.getString(NOMETEATRO));
-                entry.setData(rs.getDate(DATA));
+                {$entity-name}DTO entry = new {$entity-name}DTO();
+{$prepared-readbyid}
 
                 result = entry;
             }
@@ -122,12 +111,6 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
             PreparedStatement prep_stmt = conn.prepareStatement(update);
             prep_stmt.clearParameters();
 {$prepared-update}
-            prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
-            prep_stmt.setString(2, spettacolo.getNomeArtista());
-            prep_stmt.setDate(3, spettacolo.getData());
-            prep_stmt.setString(4, spettacolo.getGenere());
-            prep_stmt.setString(5, spettacolo.getNomeTeatro());
-            prep_stmt.setString(6, spettacolo.getCodiceSpettacolo());
             prep_stmt.executeUpdate();
             result = true;
             prep_stmt.close();

@@ -17,72 +17,72 @@ import java.util.logging.Logger;
 
 public class Db2SpettacoloDAO implements SpettacoloDAO {
 
-	Logger logger = Logger.getLogger(getClass().getCanonicalName());
+        Logger logger = Logger.getLogger(getClass().getCanonicalName());
 
-	// Definisco nome tabella
+        // Definisco nome tabella
 
-	static final String TABLE = "SPETTACOLO";
+        static final String TABLE = "SPETTACOLO";
 
-	// Definisco parametri tabella
+        // Definisco parametri tabella
 
-	static final String CODICESPETTACOLO = "CODICESPETTACOLO";
-	static final String NOMEARTISTA = "NOMEARTISTA";
-	static final String DATA = "DATA";
-	static final String GENERE = "GENERE";
-	static final String NOMETEATRO = "NOMETEATRO";
+        static final String CODICESPETTACOLO = "CODICESPETTACOLO";
+        static final String NOMEARTISTA = "NOMEARTISTA";
+        static final String DATA = "DATA";
+        static final String GENERE = "GENERE";
+        static final String NOMETEATRO = "NOMETEATRO";
 
-	// == STATEMENT SQL
-	// ====================================================================
+        // == STATEMENT SQL
+        // ====================================================================
 
-	// CREATE TABLE
+        // CREATE TABLE
 
-	static String create = "CREATE TABLE SPETTACOLO ( CODICESPETTACOLO VARCHAR(10) NOT NULL PRIMARY KEY , NOMEARTISTA VARCHAR(10) NOT NULL , DATA int NOT NULL , GENERE VARCHAR(10) NOT NULL , NOMETEATRO VARCHAR(10) NOT NULL REFERENCES TEATRO(NOME) ) ";
+        static String create = "CREATE TABLE SPETTACOLO ( CODICESPETTACOLO VARCHAR(255) NOT NULL PRIMARY KEY , NOMEARTISTA VARCHAR(255) , DATA DATE , GENERE VARCHAR(255) , NOMETEATRO VARCHAR(255) NOT NULL REFERENCES TEATRO(NOME))";
 
-	// DROP TABLE
+        // DROP TABLE
 
-	static String drop = "DROP TABLE SPETTACOLO";
+        static String drop = "DROP TABLE SPETTACOLO";
 
-	// INSERT ELEMENT
+        // INSERT ELEMENT
 
-	static String insert = "INSERT INTO SPETTACOLO (CODICESPETTACOLO , NOMEARTISTA , DATA , GENERE , NOMETEATRO ) VALUES (?,?,?,?,?)";
+        static String insert = "INSERT INTO SPETTACOLO (CODICESPETTACOLO , NOMEARTISTA , DATA , GENERE , NOMETEATRO ) VALUES (?,?,?,?,?)";
 
-	// DELETE ELEMENT
+        // DELETE ELEMENT
 
-	static String delete = "DELETE FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
+        static String delete = "DELETE FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
 
-	// SELECT ELEMENT
+        // SELECT ELEMENT
 
-	static String read_by_id = "SELECT * FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
+        static String read_by_id = "SELECT * FROM SPETTACOLO WHERE CODICESPETTACOLO = ?";
 
-	// QUERY ELEMENT
+        // QUERY ELEMENT
 
-	static String query = "SELECT * FROM SPETTACOLO";
+        static String query = "SELECT * FROM SPETTACOLO";
 
-	// UPDATE ELEMENT
+        // UPDATE ELEMENT
 
-	static String update = "UPDATE SPETTACOLO SET CODICESPETTACOLO = ?, NOMEARTISTA = ?, DATA = ?, GENERE = ?, NOMETEATRO = ? WHERE CODICESPETTACOLO = ?";
+        static String update = "UPDATE SPETTACOLO SET CODICESPETTACOLO = ?, NOMEARTISTA = ?, DATA = ?, GENERE = ?, NOMETEATRO = ? WHERE CODICESPETTACOLO = ?";
 
-	@Override
-	public void create(SpettacoloDTO spettacolo) {
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			PreparedStatement prep_stmt = conn.prepareStatement(insert);
-			prep_stmt.clearParameters();
-			prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
-			prep_stmt.setString(2, spettacolo.getNomeArtista());
-			prep_stmt.setDate(3, spettacolo.getData());
-			prep_stmt.setString(4, spettacolo.getGenere());
-			prep_stmt.setString(5, spettacolo.getNomeTeatro());
+        @Override
+        public void create(SpettacoloDTO spettacolo) {
+            Connection conn = Db2DAOFactory.createConnection();
+            try {
+                PreparedStatement prep_stmt = conn.prepareStatement(insert);
+                prep_stmt.clearParameters();
+                prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
+                prep_stmt.setString(2, spettacolo.getNomeArtista());
+                prep_stmt.setDate(3, spettacolo.getData());
+                prep_stmt.setString(4, spettacolo.getGenere());
+                prep_stmt.setString(5, spettacolo.getNomeTeatro());
 
-			prep_stmt.executeUpdate();
-			prep_stmt.close();
-		} catch (Exception e) {
-			System.out.println("create(): failed to insert entry: "
-					+ e.getMessage());
-			e.printStackTrace();
-		}
+                prep_stmt.executeUpdate();
+                prep_stmt.close();
+            } catch (Exception e) {
+                System.out.println("create(): failed to insert entry: "
+                + e.getMessage());
+                e.printStackTrace();
+            }
 
-	}
+        }
 
 	@Override
 	public SpettacoloDTO read(String codiceSpettacolo) {
@@ -216,3 +216,4 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 	}
 
 }
+
