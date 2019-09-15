@@ -3,7 +3,7 @@
 	<settings>
 		<defaultPackage>it.nfantoni.dao.test</defaultPackage>
 		<outputType>DAO</outputType>
-		<outputPath>build/dao</outputPath>
+		<outputPath>target/dao</outputPath>
 		<useSurrogatesId>false</useSurrogatesId>
 	</settings>
 	<entities>
@@ -11,14 +11,14 @@
 			<attribute name="Nome" sqlType="VARCHAR(255)" null="false" primaryKey="true" />
 			<attribute name="Indirizzo" sqlType="VARCHAR(255)" />
 			<attribute name="Capienza" sqlType="INT" />
-            <association multiplicity="*" className="Spettacolo" />
+            <association multiplicity="1" className="Spettacolo" />
 		</entity>
 		<entity name="Spettacolo">
 			<attribute name="CodiceSpettacolo" sqlType="VARCHAR(255)" null="false" primaryKey="true" />
 			<attribute name="NomeArtista" sqlType="VARCHAR(255)" />
 			<attribute name="Data" sqlType="DATE" />
 			<attribute name="Genere" sqlType="VARCHAR(255)" />
-            <association multiplicity="1" className="Teatro" />
+            <association multiplicity="*" className="Teatro" />
 		</entity>
 	</entities>
 </uml>
