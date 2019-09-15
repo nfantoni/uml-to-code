@@ -262,9 +262,9 @@ public class Dao implements Worker {
                             stringBuilderImport.append(IMPORT_DAO).append(association.getClassName())
                                     .append("DTO;").append(System.lineSeparator()));
 
-                    String entityKeyType = entity.getAttributes().stream()
+                    String entityKeyType = StringUtils.capitalize(entity.getAttributes().stream()
                             .filter(Attributes::getPrimaryKey).findFirst()
-                            .map(it -> SqlUtilities.javaType(it.getSqlType())).orElse("type not found");
+                            .map(it -> SqlUtilities.javaType(it.getSqlType())).orElse("type not found"));
 
                     String entityKey = StringUtils.decapitalize(entity.getAttributes().stream()
                             .filter(Attributes::getPrimaryKey).findFirst()
@@ -291,22 +291,25 @@ public class Dao implements Worker {
                                 .append(" = \"")
                                 .append(attributes.getName().toUpperCase()).append("\";")
                                 .append(System.lineSeparator());
-                        preparedUpdate.append(TAB).append(TAB).append("prep_stmt.set")
-                                .append(SqlUtilities.javaType(attributes.getSqlType()))
+                        preparedUpdate.append(TAB).append(TAB).append(TAB).append(TAB).append("prep_stmt.set")
+                                .append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
                                 .append("(").append(index).append(", ")
                                 .append(StringUtils.decapitalize(entity.getName())).append(".get")
                                 .append(attributes.getName()).append("());").append(System.lineSeparator());
                         preparedCreate.append(TAB).append(TAB).append(TAB).append(TAB).append("prep_stmt.set")
-                                .append(SqlUtilities.javaType(attributes.getSqlType()))
+                                .append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
                                 .append("(").append(index).append(", ")
                                 .append(StringUtils.decapitalize(entity.getName())).append(".get")
                                 .append(attributes.getName()).append("());").append(System.lineSeparator());
                         index.getAndAdd(1);
-                        readByIdRes.append(TAB).append(TAB).append("entry.set").append(attributes.getName())
-                                .append("(rs.get").append(SqlUtilities.javaType(attributes.getSqlType()))
-                                .append("(").append(attributes.getName().toUpperCase()).append("));").append(System.lineSeparator());
+                        readByIdRes.append(TAB).append(TAB).append(TAB).append(TAB).append("entry.set")
+                                .append(attributes.getName())
+                                .append("(rs.get").append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
+                                .append("(").append(attributes.getName().toUpperCase())
+                                .append("));").append(System.lineSeparator());
 
                     });
+
                     entity.getAssociations().stream()
                             .filter(association -> association.getMultiplicity().equals("*"))
                             .forEach(association ->
@@ -320,17 +323,23 @@ public class Dao implements Worker {
                                                                         .append(attributes.getName().toUpperCase())
                                                                         .append(ent.getName().toUpperCase()).append("\";")
                                                                         .append(System.lineSeparator());
-                                                                preparedUpdate.append(TAB).append(TAB).append("prep_stmt.set")
-                                                                        .append(SqlUtilities.javaType(attributes.getSqlType()))
+                                                                preparedUpdate.append(TAB).append(TAB).append(TAB).append(TAB).append("prep_stmt.set")
+                                                                        .append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
                                                                         .append("(").append(index).append(", ")
                                                                         .append(StringUtils.decapitalize(entity.getName())).append(".get")
-                                                                        .append(attributes.getName()).append("());").append(System.lineSeparator());
+                                                                        .append(attributes.getName()).append(ent.getName()).append("());").append(System.lineSeparator());
                                                                 preparedCreate.append(TAB).append(TAB).append(TAB).append(TAB).append("prep_stmt.set")
-                                                                        .append(SqlUtilities.javaType(attributes.getSqlType()))
+                                                                        .append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
                                                                         .append("(").append(index).append(", ")
                                                                         .append(StringUtils.decapitalize(entity.getName())).append(".get")
                                                                         .append(attributes.getName()).append(ent.getName()).append("());")
                                                                         .append(System.lineSeparator());
+                                                                readByIdRes.append(TAB).append(TAB).append(TAB).append(TAB).append("entry.set")
+                                                                        .append(attributes.getName())
+                                                                        .append(ent.getName())
+                                                                        .append("(rs.get").append(StringUtils.capitalize(SqlUtilities.javaType(attributes.getSqlType())))
+                                                                        .append("(").append(attributes.getName().toUpperCase())
+                                                                        .append(ent.getName().toUpperCase()).append("));").append(System.lineSeparator());
                                                                 index.getAndAdd(1);
                                                             }
 
@@ -338,9 +347,11 @@ public class Dao implements Worker {
                             );
 
 
-                    preparedUpdate.append(TAB).append(TAB).append("prep_stmt.set").append(entityKeyType).append("(").append(index).append(", ")
+                    preparedUpdate.append(TAB).append(TAB).append(TAB).append(TAB).append("prep_stmt.set").append(entityKeyType).append("(").append(index).append(", ")
                             .append(StringUtils.decapitalize(entity.getName())).append(".get")
-                            .append(entityKey).append("());").append(System.lineSeparator());
+                            .append(entity.getAttributes().stream()
+                                    .filter(Attributes::getPrimaryKey).findFirst()
+                                    .map(Attributes::getName).orElse("type not found")).append("());").append(System.lineSeparator());
 
                     entityTemplate = entityTemplate.replace("{$initializer}", initializer.toString());
                     entityTemplate = entityTemplate.replace("{$prepared-readbyid}", readByIdRes);

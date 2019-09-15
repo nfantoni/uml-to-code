@@ -87,11 +87,11 @@ public class Db2DAOFactory extends DAOFactory {
 
     // --------------------------------------------
 
-    	@Override
-	public TeatroDAO getTeatroDAO() { return new Db2TeatroDAO(); }
+        @Override
+    public TeatroDAO getTeatroDAO() { return new Db2TeatroDAO(); }
 
-	@Override
-	public SpettacoloDAO getSpettacoloDAO() { return new Db2SpettacoloDAO(); }
+    @Override
+    public SpettacoloDAO getSpettacoloDAO() { return new Db2SpettacoloDAO(); }
 
 
 

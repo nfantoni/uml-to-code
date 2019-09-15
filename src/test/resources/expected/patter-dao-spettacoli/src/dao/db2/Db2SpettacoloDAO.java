@@ -84,136 +84,136 @@ public class Db2SpettacoloDAO implements SpettacoloDAO {
 
         }
 
-	@Override
-	public SpettacoloDTO read(String codiceSpettacolo) {
-		SpettacoloDTO result = null;
-		if (codiceSpettacolo == null) {
-			System.out
-					.println("read(): cannot read an entry with a negative codiceSpettacolo");
-			return result;
-		}
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			PreparedStatement prep_stmt = conn.prepareStatement(read_by_id);
-			prep_stmt.clearParameters();
-			prep_stmt.setString(1, codiceSpettacolo);
-			ResultSet rs = prep_stmt.executeQuery();
+    @Override
+    public SpettacoloDTO read(String codiceSpettacolo) {
+        SpettacoloDTO result = null;
+        if (codiceSpettacolo == null) {
+            System.out
+            .println("read(): cannot read an entry with a negative codiceSpettacolo");
+            return result;
+        }
+        Connection conn = Db2DAOFactory.createConnection();
+        try {
+            PreparedStatement prep_stmt = conn.prepareStatement(read_by_id);
+            prep_stmt.clearParameters();
+            prep_stmt.setString(1, codiceSpettacolo);
+            ResultSet rs = prep_stmt.executeQuery();
 
-			if (rs.next()) {
-				SpettacoloDTO entry = new SpettacoloDTO();
-				entry.setCodiceSpettacolo(rs.getString(CODICESPETTACOLO));
-				entry.setGenere(rs.getString(GENERE));
-				entry.setNomeArtista(rs.getString(NOMEARTISTA));
-				entry.setNomeTeatro(rs.getString(NOMETEATRO));
-				entry.setData(rs.getDate(DATA));
+            if (rs.next()) {
+                SpettacoloDTO entry = new SpettacoloDTO();
+                entry.setCodiceSpettacolo(rs.getString(CODICESPETTACOLO));
+                entry.setNomeArtista(rs.getString(NOMEARTISTA));
+                entry.setData(rs.getDate(DATA));
+                entry.setGenere(rs.getString(GENERE));
+                entry.setNomeTeatro(rs.getString(NOMETEATRO));
 
-				result = entry;
-			}
+                result = entry;
+            }
 
-			rs.close();
-			prep_stmt.close();
-		} catch (Exception e) {
-			System.out.println("read(): failed to retrieve entry with id = "
-					+ codiceSpettacolo + ": " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
+            rs.close();
+            prep_stmt.close();
+        } catch (Exception e) {
+            System.out.println("read(): failed to retrieve entry with id = "
+            + codiceSpettacolo + ": " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            Db2DAOFactory.closeConnection(conn);
+        }
+            return result;
+    }
 
-	@Override
-	public boolean update(SpettacoloDTO spettacolo) {
-		boolean result = false;
-		if (spettacolo == null) {
-			System.out.println("update(): failed to update a null entry");
-			return result;
-		}
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			PreparedStatement prep_stmt = conn.prepareStatement(update);
-			prep_stmt.clearParameters();
-			prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
-			prep_stmt.setString(2, spettacolo.getNomeArtista());
-			prep_stmt.setDate(3, spettacolo.getData());
-			prep_stmt.setString(4, spettacolo.getGenere());
-			prep_stmt.setString(5, spettacolo.getNomeTeatro());
+    @Override
+    public boolean update(SpettacoloDTO spettacolo) {
+        boolean result = false;
+        if (spettacolo == null) {
+            System.out.println("update(): failed to update a null entry");
+            return result;
+        }
+        Connection conn = Db2DAOFactory.createConnection();
+        try {
+            PreparedStatement prep_stmt = conn.prepareStatement(update);
+            prep_stmt.clearParameters();
+                prep_stmt.setString(1, spettacolo.getCodiceSpettacolo());
+                prep_stmt.setString(2, spettacolo.getNomeArtista());
+                prep_stmt.setDate(3, spettacolo.getData());
+                prep_stmt.setString(4, spettacolo.getGenere());
+                prep_stmt.setString(5, spettacolo.getNomeTeatro());
+                prep_stmt.setString(6, spettacolo.getCodiceSpettacolo());
 
-			prep_stmt.setString(6, spettacolo.getCodiceSpettacolo());
-			prep_stmt.executeUpdate();
-			result = true;
-			prep_stmt.close();
-		} catch (Exception e) {
-			System.out.println("insert(): failed to update entry: "
-					+ e.getMessage());
-			e.printStackTrace();
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
+            prep_stmt.executeUpdate();
+            result = true;
+            prep_stmt.close();
+        } catch (Exception e) {
+            System.out.println("insert(): failed to update entry: "
+            + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            Db2DAOFactory.closeConnection(conn);
+        }
+        return result;
+    }
 
-	@Override
-	public boolean delete(String codiceSpettacolo) {
-		boolean result = false;
-		if (codiceSpettacolo == null) {
-			System.out
-					.println("delete(): cannot delete an entry with an invalid codiceSpettacolo ");
-			return result;
-		}
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			PreparedStatement prep_stmt = conn.prepareStatement(delete);
-			prep_stmt.clearParameters();
-			prep_stmt.setString(1, codiceSpettacolo);
-			prep_stmt.executeUpdate();
-			result = true;
-			prep_stmt.close();
-		} catch (Exception e) {
-			System.out.println("delete(): failed to delete entry with id = "
-					+ codiceSpettacolo + ": " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
+    @Override
+    public boolean delete(String codiceSpettacolo) {
+        boolean result = false;
+        if (codiceSpettacolo == null) {
+            System.out
+            .println("delete(): cannot delete an entry with an invalid codiceSpettacolo ");
+            return result;
+        }
+        Connection conn = Db2DAOFactory.createConnection();
+        try {
+            PreparedStatement prep_stmt = conn.prepareStatement(delete);
+            prep_stmt.clearParameters();
+            prep_stmt.setString(1, codiceSpettacolo);
+            prep_stmt.executeUpdate();
+            result = true;
+            prep_stmt.close();
+        } catch (Exception e) {
+            System.out.println("delete(): failed to delete entry with id = "
+            + codiceSpettacolo + ": " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            Db2DAOFactory.closeConnection(conn);
+        }
+        return result;
+    }
 
-	@Override
-	public boolean createTable() {
-		boolean result = false;
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			Statement stmt = conn.createStatement();
-			stmt.execute(create);
-			result = true;
-			stmt.close();
-		} catch (Exception e) {
-			System.out.println("createTable(): failed to create table '"
-					+ TABLE + "': " + e.getMessage());
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
+    @Override
+    public boolean createTable() {
+        boolean result = false;
+        Connection conn = Db2DAOFactory.createConnection();
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(create);
+            result = true;
+            stmt.close();
+        } catch (Exception e) {
+            System.out.println("createTable(): failed to create table '"
+            + TABLE + "': " + e.getMessage());
+        } finally {
+            Db2DAOFactory.closeConnection(conn);
+        }
+        return result;
+    }
 
-	@Override
-	public boolean dropTable() {
-		boolean result = false;
-		Connection conn = Db2DAOFactory.createConnection();
-		try {
-			Statement stmt = conn.createStatement();
-			stmt.execute(drop);
-			result = true;
-			stmt.close();
-		} catch (Exception e) {
-			System.out.println("dropTable(): failed to drop table '" + TABLE
-					+ "': " + e.getMessage());
-		} finally {
-			Db2DAOFactory.closeConnection(conn);
-		}
-		return result;
-	}
+    @Override
+    public boolean dropTable() {
+        boolean result = false;
+        Connection conn = Db2DAOFactory.createConnection();
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(drop);
+            result = true;
+            stmt.close();
+        } catch (Exception e) {
+            System.out.println("dropTable(): failed to drop table '" + TABLE
+            + "': " + e.getMessage());
+        } finally {
+            Db2DAOFactory.closeConnection(conn);
+        }
+        return result;
+        }
 
 }
 

@@ -18,12 +18,12 @@ public class DAOTest {
 		teatroDAO.dropTable();
 		teatroDAO.createTable();
 
-		// creo tabella Teatro
+		// creo tabella Spettacolo
 		SpettacoloDAO spettacoloDAO = daoFactoryInstance.getSpettacoloDAO();
 		spettacoloDAO.dropTable();
 		spettacoloDAO.createTable();
 
-		// Creao due istanze di tearto
+		// Creao istanze di tearto
 		TeatroDTO t1 = new TeatroDTO();
 		t1.setNome("teatro1");
 		t1.setIndirizzo("indir1");
@@ -42,8 +42,7 @@ public class DAOTest {
 		t3.setCapienza(50);
 		teatroDAO.create(t3);
 
-		// Creo tre spettacoli di uno stesso genere tenuti nello stesso teatro
-		// in date diverse
+		// Creo spettacoli
 		SpettacoloDTO s1 = new SpettacoloDTO();
 		s1.setCodiceSpettacolo("cod1");
 		s1.setData(1);
@@ -67,9 +66,6 @@ public class DAOTest {
 		s3.setNomeArtista("a1");
 		s3.setNomeTeatro("teatro1");
 		spettacoloDAO.create(s3);
-
-		// Creo tre spettacoli di genere diverso tenuti in teatri diversi anche
-		// nella stessa data
 
 		SpettacoloDTO s4 = new SpettacoloDTO();
 		s4.setCodiceSpettacolo("cod4");
@@ -97,12 +93,12 @@ public class DAOTest {
 
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("Il nome del teatro in cui si sono tenuti più spettacoli di genere balletto è: "
+		builder.append("Il nome del teatro in cui si sono tenuti piï¿½ spettacoli di genere balletto ï¿½: "
 				+ getNome(teatroDAO));
 
 		List<String> generi = getGeneri(spettacoloDAO);
 
-		builder.append("\n\nL’elenco distinto dei generi presenti nella programmazione teatrale è:");
+		builder.append("\n\nLï¿½elenco distinto dei generi presenti nella programmazione teatrale ï¿½:");
 
 		for (String g : generi) {
 			builder.append("\n" + g);

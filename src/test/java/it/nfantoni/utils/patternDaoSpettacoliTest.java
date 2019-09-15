@@ -129,7 +129,6 @@ public class patternDaoSpettacoliTest {
         assertTrue(new File("target/dao/src/dao/db2/Db2TeatroDAO.java").exists());
 
         assertTrue(new File("target/dao/src/dao/DAOFactory.java").exists());
-        assertTrue(new File("target/dao/src/dao/DAOTest.java").exists());
         assertTrue(new File("target/dao/src/dao/SpettacoloDAO.java").exists());
         assertTrue(new File("target/dao/src/dao/SpettacoloDTO.java").exists());
         assertTrue(new File("target/dao/src/dao/TeatroDAO.java").exists());

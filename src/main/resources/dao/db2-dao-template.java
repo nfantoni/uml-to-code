@@ -67,8 +67,8 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
 
     @Override
     public {$entity-name}DTO read({$entity-key-type} {$entity-key}) {
-        SpettacoloDTO result = null;
-        if (codiceSpettacolo == null) {
+        {$entity-name}DTO result = null;
+        if ({$entity-key} == null) {
             System.out
             .println("read(): cannot read an entry with a negative {$entity-key}");
             return result;
@@ -83,7 +83,6 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
             if (rs.next()) {
                 {$entity-name}DTO entry = new {$entity-name}DTO();
 {$prepared-readbyid}
-
                 result = entry;
             }
 
@@ -91,7 +90,7 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
             prep_stmt.close();
         } catch (Exception e) {
             System.out.println("read(): failed to retrieve entry with id = "
-            + codiceSpettacolo + ": " + e.getMessage());
+            + {$entity-key} + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             Db2DAOFactory.closeConnection(conn);
@@ -186,5 +185,4 @@ public class Db2{$entity-name}DAO implements {$entity-name}DAO {
         return result;
         }
 
-    }
 }
