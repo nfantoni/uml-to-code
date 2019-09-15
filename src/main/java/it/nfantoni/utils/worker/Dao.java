@@ -6,11 +6,10 @@ import it.nfantoni.utils.entities.Entity;
 import it.nfantoni.utils.settings.Settings;
 import it.nfantoni.utils.sql.SqlUtilities;
 import it.nfantoni.utils.string.StringUtils;
+import sun.misc.IOUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -67,9 +66,9 @@ public class Dao implements Worker {
                 .append(it.getName()).append("DAO get").append(it.getName()).append("DAO();").append(System.lineSeparator()));
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File daoFactoryTemplateFile = new File(Objects.requireNonNull(classLoader.getResource("dao/dao-factory-template.java")).getFile());
+        InputStream inputStream = classLoader.getResourceAsStream("dao/dao-factory-template.java");
+        String daoFactoryTemplate = StringUtils.toString(inputStream);
 
-        String daoFactoryTemplate = new String(Files.readAllBytes(Paths.get(daoFactoryTemplateFile.getAbsolutePath())));
         daoFactoryTemplate = daoFactoryTemplate.replace(ABSTRACT_DAO_PLACEHOLDER, stringBuilder.toString());
 
         try (PrintWriter out = new PrintWriter(daoSrcDir.getPath() + "/DAOFactory.java")) {
@@ -225,10 +224,9 @@ public class Dao implements Worker {
         );
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File daoFactoryTemplateFile = new File(Objects.requireNonNull(
-                classLoader.getResource("dao/db2-dao-factory-template.java")).getFile());
+        InputStream inputStream = classLoader.getResourceAsStream("dao/db2-dao-factory-template.java");
+        String daoFactoryTemplate = StringUtils.toString(inputStream);
 
-        String daoFactoryTemplate = new String(Files.readAllBytes(Paths.get(daoFactoryTemplateFile.getAbsolutePath())));
         daoFactoryTemplate = daoFactoryTemplate
                 .replace(DTO_OVERRIDE_PLACEHOLDR, stringBuilderOverride.toString())
                 .replace(IMPORT_DAO_PLACEHOLDER, stringBuilderImport.toString());
@@ -240,12 +238,12 @@ public class Dao implements Worker {
         }
     }
 
-    public void writeDb2DaoEntity() throws IOException {
+    private void writeDb2DaoEntity() throws IOException {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File daoFactoryTemplateFile = new File(Objects.requireNonNull(
-                classLoader.getResource("dao/db2-dao-template.java")).getFile());
-        String db2DaoTemplate = new String(Files.readAllBytes(Paths.get(daoFactoryTemplateFile.getAbsolutePath())));
+
+        InputStream inputStream = classLoader.getResourceAsStream("dao/db2-dao-template.java");
+        String db2DaoTemplate = StringUtils.toString(inputStream);
 
         entityList.forEach(entity -> {
 
