@@ -27,8 +27,7 @@ The entities block have to collect the entity description composed with:
         - _null_ attribute : boolean value indicate the associated column allow null value or not
         - _primaryKey_ attribute : boolean value indicate the associated column is primary key for the table
 
-## bello
-Pattern DAO
+## Pattern DAO
 
 With this example diagram:
 
